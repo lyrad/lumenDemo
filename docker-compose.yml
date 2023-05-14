@@ -1,0 +1,34 @@
+version: '3'
+services:
+    library-laravel-demo:
+        container_name: lumen-demo
+        build:
+            context: ./docker
+        volumes:
+            - .:/var/www/html
+        ports:
+            - "80:80"
+        environment:
+            - APP_ENV=local
+            - APP_DEBUG=true
+        networks:
+            - lumen-demo-network
+        depends_on:
+            - mysql
+    mysql:
+        image: 'mysql/mysql-server:8.0.32'
+        container_name: lumen-demo-mysql
+        environment:
+            MYSQL_ROOT_PASSWORD: "root"
+            MYSQL_USER: "root"
+            MYSQL_PASSWORD: "root"
+            MYSQL_DATABASE: "lumenDemo"
+        ports:
+            - 3306:3306
+        volumes:
+            - ./storage/db:/var/lib/mysql
+        networks:
+            - lumen-demo-network
+networks:
+    lumen-demo-network:
+        driver: bridge
